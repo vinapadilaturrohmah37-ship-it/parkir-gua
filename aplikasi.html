@@ -1,2 +1,143 @@
-https://vinapadilaturrohmah37-ship-it.github.io/parkir-gua/aplikasi.html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Sistem Parkir</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script>
+        if (!localStorage.getItem("sudahLogin")) {
+            alert("⚠️ Silakan login dulu!");
+            window.location.href = "index.html";
+        }
+    </script>
+
+    <header>
+        <div class="header-kiri">
+            <h2>P | Sistem Manajemen Parkir</h2>
+        </div>
+        <div class="header-kanan">
+            <span id="namaPengguna">👤 Pengguna</span>
+            <span id="waktuSekarang"></span>
+            <button id="tombolKeluar">🚪 Keluar</button>
+        </div>
+    </header>
+
+    <main class="wadah">
+        <div class="grid-4">
+            <div class="kartu">
+                <p class="label">Kendaraan Parkir</p>
+                <p class="nilai" id="jmlParkir">1</p>
+            </div>
+            <div class="kartu">
+                <p class="label">Sisa Slot</p>
+                <p class="nilai" id="sisaSlot">99</p>
+            </div>
+            <div class="kartu">
+                <p class="label">Total Keluar</p>
+                <p class="nilai" id="totalKeluar">0</p>
+            </div>
+            <div class="kartu">
+                <p class="label">Pendapatan Hari Ini</p>
+                <p class="nilai hijau" id="pendapatan">Rp 0</p>
+            </div>
+        </div>
+
+        <div class="tab-menu">
+            <button class="tab-link aktif" data-tab="parkir">Operasional Parkir</button>
+            <button class="tab-link" data-tab="riwayat">Riwayat Transaksi</button>
+            <button class="tab-link" data-tab="pengaturan">Pengaturan & Tarif</button>
+        </div>
+
+        <div class="tab-badan" id="parkir">
+            <div class="grid-2">
+                <div class="kotak">
+                    <h3>📥 Kendaraan Masuk</h3>
+                    <form id="formMasuk">
+                        <label>Plat Nomor</label>
+                        <input type="text" id="platNomor" placeholder="Contoh: B 1234 XYZ" required>
+
+                        <label>Jenis Kendaraan</label>
+                        <select id="jenisKendaraan">
+                            <option value="Motor">Motor</option>
+                            <option value="Mobil">Mobil</option>
+                            <option value="Truk">Truk</option>
+                        </select>
+
+                        <label>Catatan (Opsional)</label>
+                        <input type="text" id="catatan" placeholder="Contoh: Helm dititip">
+
+                        <button type="submit" class="btn-biru">✅ Catat Masuk</button>
+                    </form>
+                </div>
+
+                <div class="kotak">
+                    <div class="baris-judul">
+                        <h3>🚘 Kendaraan Sedang Parkir</h3>
+                        <input type="text" id="kotakCari" placeholder="Cari plat / kode tiket...">
+                    </div>
+                    <div class="tabel-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No. Tiket</th>
+                                    <th>Plat Nomor</th>
+                                    <th>Jenis</th>
+                                    <th>Waktu Masuk</th>
+                                    <th>Biaya</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="daftarKendaraan">
+                                <tr>
+                                    <td>PKR-A1B2C3</td>
+                                    <td>D 20843 DF</td>
+                                    <td><span class="label-truk">Truk</span></td>
+                                    <td>18/11/2026, 08:25</td>
+                                    <td>Rp 8.000</td>
+                                    <td>
+                                        <button class="btn-keluar">Keluar</button>
+                                        <button class="btn-tiket">Tiket</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-badan tersembunyi" id="riwayat">
+            <div class="kotak">
+                <h3>📜 Riwayat Transaksi</h3>
+                <p>Semua riwayat kendaraan yang keluar akan muncul di sini.</p>
+                <div id="daftarRiwayat"></div>
+            </div>
+        </div>
+
+        <div class="tab-badan tersembunyi" id="pengaturan">
+            <div class="kotak">
+                <h3>⚙️ Pengaturan Tarif & Slot</h3>
+                <label>Total Slot Parkir</label>
+                <input type="number" id="totalSlot" value="100">
+
+                <label>Tarif Motor (per jam)</label>
+                <input type="number" id="tarifMotor" value="2000">
+
+                <label>Tarif Mobil (per jam)</label>
+                <input type="number" id="tarifMobil" value="5000">
+
+                <label>Tarif Truk (per jam)</label>
+                <input type="number" id="tarifTruk" value="8000">
+
+                <button class="btn-biru" id="simpanPengaturan">💾 Simpan Pengaturan</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
 
