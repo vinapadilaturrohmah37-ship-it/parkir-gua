@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Sistem Parkir</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="halaman-login">
+    <div class="kotak-login">
+        <h1>🚗 Sistem Manajemen Parkir</h1>
+        <p>Masukkan akun untuk melanjutkan</p>
+
+        <form id="formLogin">
+            <div class="input-box">
+                <label>👤 Username</label>
+                <input type="text" id="username" placeholder="Ketik username..." required>
+            </div>
+            <div class="input-box">
+                <label>🔒 Password</label>
+                <input type="password" id="password" placeholder="Ketik password..." required>
+            </div>
+            <button type="submit">Masuk ke Sistem</button>
+            <p id="pesanSalah" class="pesan-salah"></p>
+            <p class="info-akun">Akun: <strong>admin</strong> / <strong>admin123</strong></p>
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
