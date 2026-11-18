@@ -1,418 +1,151 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PARKIRKU</title>
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-body {
-  font-family: Arial, sans-serif;
-  background: #eef2f7;
-  color: #172033;
-}
-header {
-  background: #101d35;
-  color: white;
-  padding: 25px 20px;
-}
-header h1 {
-  font-size: 27px;
-}
-header p {
-  color: #b9c8dc;
-  margin-top: 6px;
-}
-.container {
-  max-width: 950px;
-  margin: 25px auto;
-  padding: 0 15px;
-}
-.cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 22px;
-}
-.card {
-  background: white;
-  padding: 18px;
-  border-radius: 12px;
-  box-shadow: 0 3px 12px #0000000b;
-}
-.card p {
-  color: #718096;
-  font-size: 13px;
-}
-.card h2 {
-  font-size: 19px;
-  margin-top: 12px;
-  overflow-wrap: anywhere;
-}
-.section {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 3px 12px #0000000b;
-}
-.section h3 {
-  margin-bottom: 18px;
-}
-label {
-  display: block;
-  margin: 12px 0 7px;
-  font-size: 14px;
-  font-weight: bold;
-}
-input, select {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #d5dce6;
-  border-radius: 8px;
-  font-size: 15px;
-}
-button {
-  border: none;
-  padding: 12px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-}
-.submit {
-  background: #1765d1;
-  color: white;
-  width: 100%;
-  margin-top: 18px;
-}
-.export {
-  background: #13865b;
-  color: white;
-}
-.delete {
-  background: #ffe5e5;
-  color: #c62828;
-  padding: 8px 10px;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 650px;
-}
-th, td {
-  padding: 12px 10px;
-  border-bottom: 1px solid #e8edf3;
-  text-align: left;
-  font-size: 13px;
-}
-th {
-  background: #f3f6fa;
-}
-.table-wrap {
-  overflow-x: auto;
-}
-.actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-#search {
-  max-width: 230px;
-}
-footer {
-  text-align: center;
-  padding: 20px;
-  color: #778397;
-  font-size: 12px;
-}
-@media(max-width:600px) {
-  .cards {
-    grid-template-columns: 1fr;
-  }
-  .actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
-  #search {
-    max-width: 100%;
-  }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Sistem Parkir</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Cek Login Otomatis -->
+    <script>
+        if (!localStorage.getItem("sudahLogin")) {
+            alert("⚠️ Silakan login dulu!");
+            window.location.href = "login.html";
+        }
+    </script>
 
-<header>
-  <h1>🅿️ PARKIRKU</h1>
-  <p>Sistem Pengelolaan Keuangan Parkir</p>
-</header>
+    <!-- Header Atas -->
+    <header>
+        <div class="header-kiri">
+            <h2>P | Sistem Manajemen Parkir</h2>
+        </div>
+        <div class="header-kanan">
+            <span id="namaPengguna">👤 Pengguna</span>
+            <span id="waktuSekarang"></span>
+            <button id="tombolKeluar">🚪 Keluar</button>
+        </div>
+    </header>
 
-<div class="container">
+    <main class="wadah">
+        <!-- Kartu Ringkasan -->
+        <div class="grid-4">
+            <div class="kartu">
+                <p class="label">Kendaraan Parkir</p>
+                <p class="nilai" id="jmlParkir">1</p>
+            </div>
+            <div class="kartu">
+                <p class="label">Sisa Slot</p>
+                <p class="nilai" id="sisaSlot">99</p>
+            </div>
+            <div class="kartu">
+                <p class="label">Total Keluar</p>
+                <p class="nilai" id="totalKeluar">0</p>
+            </div>
+            <div class="kartu">
+                <p class="label">Pendapatan Hari Ini</p>
+                <p class="nilai hijau" id="pendapatan">Rp 0</p>
+            </div>
+        </div>
 
-  <div class="cards">
-    <div class="card">
-      <p>💰 Pendapatan Hari Ini</p>
-      <h2 id="today">Rp0</h2>
-    </div>
-    <div class="card">
-      <p>💵 Total Pendapatan</p>
-      <h2 id="total">Rp0</h2>
-    </div>
-    <div class="card">
-      <p>🚗 Total Kendaraan</p>
-      <h2 id="count">0</h2>
-    </div>
-  </div>
+        <!-- Menu Tab -->
+        <div class="tab-menu">
+            <button class="tab-link aktif" data-tab="parkir">Operasional Parkir</button>
+            <button class="tab-link" data-tab="riwayat">Riwayat Transaksi</button>
+            <button class="tab-link" data-tab="pengaturan">Pengaturan & Tarif</button>
+        </div>
 
-  <div class="section">
-    <h3>➕ Catat Parkir Baru</h3>
+        <!-- Konten: Operasional Parkir -->
+        <div class="tab-badan" id="parkir">
+            <div class="grid-2">
+                <!-- Form Masuk -->
+                <div class="kotak">
+                    <h3>📥 Kendaraan Masuk</h3>
+                    <form id="formMasuk">
+                        <label>Plat Nomor</label>
+                        <input type="text" id="platNomor" placeholder="Contoh: B 1234 XYZ" required>
 
-    <form id="parkingForm">
+                        <label>Jenis Kendaraan</label>
+                        <select id="jenisKendaraan">
+                            <option value="Motor">Motor</option>
+                            <option value="Mobil">Mobil</option>
+                            <option value="Truk">Truk</option>
+                        </select>
 
-      <label>Jenis Kendaraan</label>
-      <select id="vehicle" required>
-        <option value="">Pilih kendaraan</option>
-        <option value="Motor">Motor</option>
-        <option value="Mobil">Mobil</option>
-        <option value="Truk">Truk</option>
-        <option value="Bus">Bus</option>
-      </select>
+                        <label>Catatan (Opsional)</label>
+                        <input type="text" id="catatan" placeholder="Contoh: Helm dititip">
 
-      <label>Nomor Polisi</label>
-      <input id="plate" placeholder="Contoh: G 1234 AB" required>
+                        <button type="submit" class="btn-biru">✅ Catat Masuk</button>
+                    </form>
+                </div>
 
-      <label>Tarif Parkir (Rp)</label>
-      <input id="price" type="number" min="1"
-        placeholder="Contoh: 2000" required>
+                <!-- Daftar Parkir -->
+                <div class="kotak">
+                    <div class="baris-judul">
+                        <h3>🚘 Kendaraan Sedang Parkir</h3>
+                        <input type="text" id="kotakCari" placeholder="Cari plat / kode tiket...">
+                    </div>
+                    <div class="tabel-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No. Tiket</th>
+                                    <th>Plat Nomor</th>
+                                    <th>Jenis</th>
+                                    <th>Waktu Masuk</th>
+                                    <th>Biaya</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="daftarKendaraan">
+                                <tr>
+                                    <td>PKR-A1B2C3</td>
+                                    <td>D 20843 DF</td>
+                                    <td><span class="label-truk">Truk</span></td>
+                                    <td>18/11/2026, 08:25</td>
+                                    <td>Rp 8.000</td>
+                                    <td>
+                                        <button class="btn-keluar">Keluar</button>
+                                        <button class="btn-tiket">Tiket</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-      <label>Metode Pembayaran</label>
-      <select id="payment">
-        <option value="Tunai">Tunai</option>
-        <option value="Non-Tunai">Non-Tunai</option>
-      </select>
+        <!-- Konten: Riwayat -->
+        <div class="tab-badan tersembunyi" id="riwayat">
+            <div class="kotak">
+                <h3>📜 Riwayat Transaksi</h3>
+                <p>Semua riwayat kendaraan yang keluar akan muncul di sini.</p>
+                <div id="daftarRiwayat"></div>
+            </div>
+        </div>
 
-      <label>Tanggal dan Waktu</label>
-      <input id="date" type="datetime-local" required>
+        <!-- Konten: Pengaturan -->
+        <div class="tab-badan tersembunyi" id="pengaturan">
+            <div class="kotak">
+                <h3>⚙️ Pengaturan Tarif & Slot</h3>
+                <label>Total Slot Parkir</label>
+                <input type="number" id="totalSlot" value="100">
 
-      <button class="submit" type="submit">
-        SIMPAN TRANSAKSI
-      </button>
+                <label>Tarif Motor (per jam)</label>
+                <input type="number" id="tarifMotor" value="2000">
 
-    </form>
-  </div>
+                <label>Tarif Mobil (per jam)</label>
+                <input type="number" id="tarifMobil" value="5000">
 
-  <div class="section">
-    <div class="actions">
-      <h3>📋 Riwayat Parkir</h3>
-      <button class="export" onclick="exportCSV()">
-        Unduh Laporan
-      </button>
-    </div>
+                <label>Tarif Truk (per jam)</label>
+                <input type="number" id="tarifTruk" value="8000">
 
-    <input id="search" placeholder="Cari nomor polisi..."
-      oninput="showData()">
+                <button class="btn-biru" id="simpanPengaturan">💾 Simpan Pengaturan</button>
+            </div>
+        </div>
+    </main>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Kendaraan</th>
-            <th>Nomor Polisi</th>
-            <th>Tarif</th>
-            <th>Pembayaran</th>
-            <th>Waktu</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="history"></tbody>
-      </table>
-    </div>
-  </div>
-
-</div>
-
-<footer>
-  PARKIRKU © 2026 | Sistem Keuangan Parkir
-</footer>
-
-<script>
-const rupiah = angka =>
-  new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0
-  }).format(angka);
-
-let data = JSON.parse(
-  localStorage.getItem("parkirku_data") || "[]"
-);
-
-function saveData() {
-  localStorage.setItem("parkirku_data",
-    JSON.stringify(data));
-}
-
-function setDate() {
-  const now = new Date();
-  const local = new Date(
-    now.getTime() - now.getTimezoneOffset() * 60000
-  );
-  document.getElementById("date").value =
-    local.toISOString().slice(0, 16);
-}
-
-document.getElementById("parkingForm")
-.addEventListener("submit", function(e) {
-  e.preventDefault();
-
-  const vehicle = document.getElementById("vehicle").value;
-  const plate = document.getElementById("plate").value
-    .trim().toUpperCase();
-  const price = Number(document.getElementById("price").value);
-  const payment = document.getElementById("payment").value;
-  const date = document.getElementById("date").value;
-
-  if (!vehicle || !plate || price <= 0 || !date ||
-      !Number.isFinite(price)) {
-    alert("Mohon isi semua data dengan benar!");
-    return;
-  }
-
-  data.unshift({
-    id: Date.now() + Math.random(),
-    vehicle,
-    plate,
-    price,
-    payment,
-    date
-  });
-
-  saveData();
-  showData();
-
-  this.reset();
-  setDate();
-
-  alert("Transaksi parkir berhasil disimpan!");
-});
-
-function showData() {
-  const today = new Date().toLocaleDateString("en-CA");
-
-  const incomeToday = data
-    .filter(item => item.date.slice(0, 10) === today)
-    .reduce((sum, item) => sum + item.price, 0);
-
-  const incomeTotal = data.reduce(
-    (sum, item) => sum + item.price, 0
-  );
-
-  document.getElementById("today").textContent =
-    rupiah(incomeToday);
-
-  document.getElementById("total").textContent =
-    rupiah(incomeTotal);
-
-  document.getElementById("count").textContent =
-    data.length;
-
-  const search = document.getElementById("search")
-    .value.toLowerCase();
-
-  const filtered = data.filter(item =>
-    item.plate.toLowerCase().includes(search)
-  );
-
-  const history = document.getElementById("history");
-
-  if (filtered.length === 0) {
-    history.innerHTML =
-      '<tr><td colspan="7">Belum ada transaksi parkir.</td></tr>';
-    return;
-  }
-
-  history.innerHTML = filtered.map((item, index) => `
-    <tr>
-      <td>${index + 1}</td>
-      <td>${escapeHTML(item.vehicle)}</td>
-      <td>${escapeHTML(item.plate)}</td>
-      <td>${rupiah(item.price)}</td>
-      <td>${escapeHTML(item.payment)}</td>
-      <td>${escapeHTML(item.date.replace("T", " "))}</td>
-      <td>
-        <button class="delete"
-          onclick="deleteData(${JSON.stringify(item.id)})">
-          Hapus
-        </button>
-      </td>
-    </tr>
-  `).join("");
-}
-
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
-}
-
-function deleteData(id) {
-  if (confirm("Hapus transaksi ini?")) {
-    data = data.filter(item => item.id !== id);
-    saveData();
-    showData();
-  }
-}
-
-function exportCSV() {
-  if (data.length === 0) {
-    alert("Belum ada data untuk diunduh!");
-    return;
-  }
-
-  const rows = [
-    ["Kendaraan", "Nomor Polisi", "Tarif",
-     "Pembayaran", "Tanggal"],
-    ...data.map(item => [
-      item.vehicle,
-      item.plate,
-      item.price,
-      item.payment,
-      item.date
-    ])
-  ];
-
-  const csv = "\uFEFF" + rows.map(row =>
-    row.map(value =>
-      '"' + String(value).replace(/"/g, '""') + '"'
-    ).join(";")
-  ).join("\n");
-
-  const blob = new Blob([csv], {
-    type: "text/csv;charset=utf-8;"
-  });
-
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "laporan-parkir.csv";
-  link.click();
-  URL.revokeObjectURL(url);
-}
-
-setDate();
-showData();
-</script>
-
+    <script src="script.js"></script>
 </body>
 </html>
